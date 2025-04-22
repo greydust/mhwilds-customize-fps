@@ -151,6 +151,10 @@ end
 local lastWeaponType = -1
 local lastShellType = -1
 re.on_frame(function()
+    if not setting.Settings.Enabled then
+        return
+    end
+
     local character = getCharacter()
     if character and character:get_IsWeaponOn() then
         local weaponType = character:get_WeaponType() -- app.WeaponDef.TYPE
