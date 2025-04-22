@@ -156,50 +156,60 @@ re.on_frame(function()
     end
 
     local character = getCharacter()
-    if character then
-        local weaponType = character:get_WeaponType() -- app.WeaponDef.TYPE
-        local shellType = -1
-
-        local weaponName = util.WeaponType[weaponType]
-        local ammoName = ''
-        if weaponType == 12 or weaponType == 13 then
-            local wpHandling = character:get_WeaponHandling() -- app.cHunterWpGunHandling
-            if not wpHandling then
-                log.debug('Using bowguns but get_WeaponHandling is nil') 
-                return false
-            end
-            shellType = wpHandling:get_ShellType() -- System.Int32
-            ammoName = util.ShellType[shellType]
-        end
-
-        if weaponType ~= lastWeaponType or shellType ~= lastShellType then
-            local option = nil
-            if shellType == -1 then
-                option = setting.Settings.FPS[weaponName]
-            else
-                option = setting.Settings.FPS[weaponName].Ammo[ammoName]
-            end
-            if option == nil then
-                log.debug('Option not found for weapon: ' .. weaponName .. ' ammo: ' .. ammoName) 
-                return false
-            end
-
-            if option.Default then
-                option = setting.Settings.FPS.Default
-            end
-
-            if not option.Unchanged then
-                if option.FrameGeneration ~= util.FrameGeneration.Unchanged then
-                    setFrameGeneration(option.FrameGeneration)
-                end
-                setCappedFPS(option.CappedFPS)
-                if option.CappedFPS then
-                    setMaxFPS(option.MaxFPS)
-                end
-            end
-        end
-
-        lastShellType = shellType
-        lastWeaponType = weaponType
+    if character == nil then
+        return
     end
+
+    local weaponType = character:get_WeaponType() -- app.WeaponDef.TYPE
+    if weaponType < 0 or weaponType > 13 then
+        log.debug('Invalid weapon type: ' .. weaponType)
+        return
+    end
+    local shellType = -1
+
+    local weaponName = util.WeaponType[weaponType]
+    local ammoName = ''
+    if weaponType == 12 or weaponType == 13 then
+        local wpHandling = character:get_WeaponHandling() -- app.cHunterWpGunHandling
+        if not wpHandling then
+            log.debug('Using bowguns but get_WeaponHandling is nil') 
+            return false
+        end
+        shellType = wpHandling:get_ShellType() -- System.Int32
+        if shellType < 0 or shellType > 19 then
+            log.debug('Invalid shell type: ' .. shellType)
+            return
+        end
+        ammoName = util.ShellType[shellType]
+    end
+
+    if weaponType ~= lastWeaponType or shellType ~= lastShellType then
+        local option = nil
+        if shellType == -1 then
+            option = setting.Settings.FPS[weaponName]
+        else
+            option = setting.Settings.FPS[weaponName].Ammo[ammoName]
+        end
+        if option == nil then
+            log.debug('Option not found for weapon: ' .. weaponName .. ' ammo: ' .. ammoName) 
+            return false
+        end
+
+        if option.Default then
+            option = setting.Settings.FPS.Default
+        end
+
+        if not option.Unchanged then
+            if option.FrameGeneration ~= util.FrameGeneration.Unchanged then
+                setFrameGeneration(option.FrameGeneration)
+            end
+            setCappedFPS(option.CappedFPS)
+            if option.CappedFPS then
+                setMaxFPS(option.MaxFPS)
+            end
+        end
+    end
+
+    lastShellType = shellType
+    lastWeaponType = weaponType
 end)
