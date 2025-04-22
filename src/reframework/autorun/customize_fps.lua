@@ -156,7 +156,7 @@ re.on_frame(function()
     end
 
     local character = getCharacter()
-    if character and character:get_IsWeaponOn() then
+    if character then
         local weaponType = character:get_WeaponType() -- app.WeaponDef.TYPE
         local shellType = -1
 
