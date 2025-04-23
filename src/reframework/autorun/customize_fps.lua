@@ -200,9 +200,11 @@ re.on_frame(function()
         end
 
         if not option.Unchanged then
+            --[[
             if option.FrameGeneration ~= util.FrameGeneration.Unchanged then
                 setFrameGeneration(option.FrameGeneration)
             end
+            ]]--
             setCappedFPS(option.CappedFPS)
             if option.CappedFPS then
                 setMaxFPS(option.MaxFPS)
