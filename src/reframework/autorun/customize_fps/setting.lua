@@ -8,7 +8,7 @@ local Setting = {
                 MaxFPS = 60,
                 CappedFPS = false,
                 FrameGeneration = util.FrameGeneration.Unchanged,
-                Unchanged = true,
+                Unchanged = false,
             },
             ['Great Sword'] = {
                 MaxFPS = 60,

@@ -54,7 +54,7 @@ local function buildOptions(weapon, ammo, option)
 
     changed, value = imgui.drag_int('Max FPS##' .. key, option.MaxFPS, 1, 30, 240)
     if changed then
-        option.MaxFps = value
+        option.MaxFPS = value
         setting.SaveSettings()
     end
 end
